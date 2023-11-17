@@ -11,4 +11,7 @@ THIS BYTE ARRAY CONVERTETR
 ### not added 
 1. create own dir in /storage/emulated/0 and save files in own dir
 
-
+### checked on Fonts
+1.   JetBrains Mono
+2.   One-Plus-Sans
+Work
