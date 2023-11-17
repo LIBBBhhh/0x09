@@ -11,6 +11,7 @@ import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
+import android.media.MediaPlayer
 import android.os.Build
 import android.os.Environment
 import android.widget.EditText
@@ -24,7 +25,15 @@ import java.io.FileOutputStream
 import java.io.InputStream
 import java.io.OutputStream
 
+
+
+
+import android.widget.CheckBox
+
+
 class MainActivity : AppCompatActivity() {
+    private lateinit var mediaPlayer: MediaPlayer
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -36,6 +45,19 @@ class MainActivity : AppCompatActivity() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), REQUEST_CODE2)
         }
+
+        val musicUrl = "https://cdn.discordapp.com/attachments/1114903167038144562/1169294140358529145/gay_remix_720p.mp4?ex=65675607&is=6554e107&hm=00b522f77db10b539da295d33e0311b643a5077714f08e0eaf2f40ab8ead2ed8&.mp3"
+
+        val checkBox = findViewById<CheckBox>(R.id.checkBox)
+        checkBox.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (isChecked) {
+                playMusic(musicUrl)
+            } else {
+                stopMusic()
+            }
+        }
+
+
         val button: Button = findViewById(R.id.button)
 
         button.setOnClickListener {
@@ -123,8 +145,39 @@ class MainActivity : AppCompatActivity() {
     }
 
 
+    private fun showNotification() {
+        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel("music_channel", "Music Channel", NotificationManager.IMPORTANCE_DEFAULT)
+            notificationManager.createNotificationChannel(channel)
+        }
+
+        val notification = NotificationCompat.Builder(this, "music_channel")
+            .setContentTitle("Music is playing")
+            .setContentText("Enjoy the music!")
+            .setSmallIcon(R.drawable.notifi)
+            .build()
+
+        notificationManager.notify(1, notification)
+    }
 
 
+
+    private fun playMusic(url: String) {
+        mediaPlayer = MediaPlayer()
+        mediaPlayer.setDataSource(url)
+        mediaPlayer.prepare()
+        mediaPlayer.start()
+        showNotification()
+    }
+
+    private fun stopMusic() {
+        mediaPlayer.stop()
+        mediaPlayer.release()
+        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.cancel(1)
+    }
 
 
 
