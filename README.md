@@ -4,7 +4,7 @@ THIS BYTE ARRAY CONVERTETR
 
 ### FUNCTIONS:
 1. Request storage permission
-2. File Chosing
+2. File Choosing
 3. create file and write byte array
 
 
